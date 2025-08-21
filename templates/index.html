@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Management - Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <!-- Bottom Navbar -->
+  <div class="navbar">
+    <a href="/" class="active">🏠 Home</a>
+    <a href="/entry">➕ Entry</a>
+    <a href="/search">🔍 Search</a>
+  </div>
+
+  <div class="container home-container fade-in">
+    <h2>Welcome 👋</h2>
+    <p class="subtitle">Manage your customers with ease</p>
+
+    <div class="home-options">
+      <a href="/entry" class="option-card gradient-card">
+        <h3>➕ Enter Customer</h3>
+        <p>Add new customer details quickly.</p>
+      </a>
+
+      <a href="/search" class="option-card gradient-card">
+        <h3>🔍 Search Customers</h3>
+        <p>Find customers by name or policy number.</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

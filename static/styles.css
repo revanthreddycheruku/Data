@@ -1,0 +1,202 @@
+/* General */
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f9f9f9, #e3f2fd);
+  color: #333;
+}
+
+/* Container */
+.container {
+  max-width: 500px;
+  margin: 80px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 25px rgba(0,0,0,0.12);
+}
+
+/* Headings */
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #0077b6;
+}
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Form Groups */
+.input-group {
+  margin-bottom: 15px;
+}
+
+/* Inputs */
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+  border-color: #0077b6;
+  box-shadow: 0 0 8px rgba(0,119,182,0.3);
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.3s ease;
+}
+.btn-primary {
+  background: #0077b6;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #005f87;
+  transform: scale(1.03);
+}
+.btn-secondary {
+  background: #999;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: #777;
+  transform: scale(1.03);
+}
+
+/* Snackbar */
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 14px;
+  position: fixed;
+  z-index: 2000;        /* higher than navbar */
+  left: 50%;
+  bottom: 80px;         /* lifted above navbar */
+  transform: translateX(-50%);
+  font-size: 15px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+}
+
+#snackbar.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+@keyframes fadein { from {opacity: 0;} to {opacity: 1;} }
+@keyframes fadeout { from {opacity: 1;} to {opacity: 0;} }
+
+/* Loader */
+#loader {
+  display: none;
+  margin: 20px auto;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #0077b6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg);} }
+
+/* Results */
+.result-card {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 12px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+}
+.result-card p { margin: 4px 0; font-size: 14px; }
+.slide-in { animation: slideIn 0.5s ease; }
+@keyframes slideIn { from {transform: translateY(20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+
+/* Home Options */
+.home-options {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.option-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: #333;
+}
+.option-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+}
+.gradient-card {
+  background: linear-gradient(135deg, #90e0ef, #00b4d8);
+  color: #fff;
+}
+
+/* Navbar (Bottom) */
+.navbar {
+  background: #0077b6;
+  padding: 12px;
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
+}
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+.navbar a:hover { background: #005f87; }
+.navbar a.active { background: #023e5a; }
+
+/* Animations */
+.fade-in { animation: fadeIn 0.6s ease; }
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container { margin: 60px 15px 100px 15px; }
+  h2 { font-size: 20px; }
+  .option-card h3 { font-size: 18px; }
+}
+
+/* Loader */
+#loader {
+  display: none;
+  margin: 20px auto;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #0077b6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite, fadeIn 0.3s ease;
+}
+@keyframes spin { 100% { transform: rotate(360deg);} }

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enter Customer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <!-- Bottom Navbar -->
+  <div class="navbar">
+    <a href="/">🏠 Home</a>
+    <a href="/entry" class="active">➕ Entry</a>
+    <a href="/search">🔍 Search</a>
+  </div>
+
+  <div class="container fade-in">
+    <h2>Enter Customer Data</h2>
+
+    <form id="customerForm" class="animated-form">
+      <div class="input-group">
+        <label>Customer Name</label>
+        <input type="text" name="customername" placeholder="Enter full name" required>
+      </div>
+
+      <div class="input-group">
+        <label>Policy Number</label>
+        <input type="text" name="policyNumber" placeholder="9 to 12 digits" required pattern="^\d{9,12}$">
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="example@email.com">
+      </div>
+
+      <div class="input-group">
+        <label>Date of Birth</label>
+        <input type="date" name="dateOfBirth">
+      </div>
+
+      <div class="input-group">
+        <label>Phone</label>
+        <input type="tel" name="phone" placeholder="Enter phone number" required>
+      </div>
+
+      <button type="submit" class="btn-primary">✅ Submit</button>
+      <button type="reset" class="btn-secondary">♻️ Reset</button>
+    </form>
+
+    <!-- Loader -->
+    <div id="loader"></div>
+
+    <pre id="result"></pre>
+  </div>
+
+  <!-- Snackbar -->
+  <div id="snackbar"></div>
+
+  <script>
+    const form = document.getElementById('customerForm');
+    const snackbar = document.getElementById('snackbar');
+    const loader = document.getElementById('loader');
+
+    function showSnackbar(message, success = true) {
+      snackbar.textContent = message;
+      snackbar.style.backgroundColor = success ? "#28a745" : "#dc3545";
+      snackbar.className = "show";
+      setTimeout(() => { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loader.style.display = "block"; // show loader
+
+      const fd = new FormData(form);
+      const data = {};
+      fd.forEach((v, k) => data[k] = v);
+
+      try {
+        const res = await fetch('/add_customer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+
+        if (json.status === 'success') {
+          form.reset();
+          document.getElementById('result').textContent = '';
+          showSnackbar("✅ Customer added successfully!", true);
+        } else {
+          document.getElementById('result').textContent = JSON.stringify(json, null, 2);
+          showSnackbar("❌ Failed to add customer!", false);
+        }
+      } catch (err) {
+        console.error(err);
+        showSnackbar("⚠️ Network or server error!", false);
+      } finally {
+        loader.style.display = "none"; // hide loader
+      }
+    });
+  </script>
+</body>
+</html>

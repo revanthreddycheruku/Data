@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Search Customers</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* Ensure "no results" stays hidden until needed */
+    #noResults {
+      margin-top: 20px;
+      padding: 12px;
+      background: #ffefef;
+      color: #b00020;
+      border-radius: 6px;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Bottom Navbar -->
+  <div class="navbar">
+    <a href="/">🏠 Home</a>
+    <a href="/entry">➕ Entry</a>
+    <a href="/search" class="active">🔍 Search</a>
+  </div>
+
+  <div class="container fade-in">
+    <h2>Search Customers</h2>
+
+    <form id="searchForm" class="animated-form">
+      <label>Search By:</label>
+      <select id="searchBy" name="searchBy" required onchange="showInput()">
+        <option value="">--Select--</option>
+        <option value="name">Customer Name</option>
+        <option value="policy">Policy Number</option>
+      </select>
+
+      <div id="nameInput" style="display:none;">
+        <label>Customer Name:</label>
+        <input type="text" name="customername" placeholder="Enter customer name">
+      </div>
+
+      <div id="policyInput" style="display:none;">
+        <label>Policy Number:</label>
+        <input type="text" name="policyNumber" placeholder="Enter policy number" pattern="^\d{9,12}$">
+      </div>
+
+      <button type="submit" class="btn-primary">🔍 Search</button>
+    </form>
+
+    <!-- Loader -->
+    <div id="loader"></div>
+
+    <!-- Results -->
+    <div id="noResults">❌ No matching records found.</div>
+    <div id="resultsContainer"></div>
+  </div>
+
+  <script>
+    function showInput() {
+      const searchBy = document.getElementById('searchBy').value;
+      document.getElementById('nameInput').style.display = (searchBy === 'name') ? 'block' : 'none';
+      document.getElementById('policyInput').style.display = (searchBy === 'policy') ? 'block' : 'none';
+    }
+
+    const form = document.getElementById('searchForm');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const noResults = document.getElementById('noResults');
+    const loader = document.getElementById('loader');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      const query = {};
+      fd.forEach((v, k) => query[k] = v);
+
+      // Reset UI
+      loader.style.display = "block"; // show spinner
+      resultsContainer.innerHTML = "";
+      noResults.style.display = "none";
+
+      try {
+        const res = await fetch('/search_customer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(query)
+        });
+        const data = await res.json();
+
+        resultsContainer.innerHTML = '';
+        if (Array.isArray(data) && data.length > 0) {
+          noResults.style.display = "none"; // hide error
+          data.forEach(cust => {
+            const card = document.createElement("div");
+            card.classList.add("result-card", "slide-in");
+            card.innerHTML = `
+              <p><b>Name:</b> ${cust.customername || cust["Customer Name"] || '-'}</p>
+              <p><b>Policy:</b> ${cust.policyNumber || cust["Policy Number"] || '-'}</p>
+              <p><b>Email:</b> ${cust.email || cust["Email"] || '-'}</p>
+              <p><b>DOB:</b> ${cust.dateOfBirth || cust["Date of Birth"] || '-'}</p>
+              <p><b>Phone:</b> ${cust.phone || cust["Phone"] || '-'}</p>
+            `;
+            resultsContainer.appendChild(card);
+          });
+        } else {
+          noResults.style.display = "block"; // show "no results"
+        }
+      } catch (err) {
+        console.error(err);
+        noResults.style.display = "block";
+        noResults.textContent = "⚠️ Error fetching results.";
+      } finally {
+        loader.style.display = "none"; // hide spinner
+      }
+    });
+  </script>
+</body>
+</html>
