@@ -83,7 +83,7 @@
       noResults.style.display = "none";
 
       try {
-        const res = await fetch('/search_customer', {
+        const res = await fetch('https://data-uo0r.onrender.com/search_customer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(query)
