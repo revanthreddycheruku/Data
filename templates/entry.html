@@ -77,7 +77,7 @@
       fd.forEach((v, k) => data[k] = v);
 
       try {
-        const res = await fetch('/add_customer', {
+        const res = await fetch('https://data-uo0r.onrender.com/add_customer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
