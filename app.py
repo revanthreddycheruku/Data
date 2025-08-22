@@ -10,6 +10,42 @@ app = Flask(__name__)
 
 # ----- CONFIG -----
 # Name of your Google Sheet (exact title)
+import os, json
+import gspread
+from google.oauth2.service_account import Credentials
+
+# ----- CONFIG -----
+SHEET_NAME = "Customer Data"
+SCOPE = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+
+def get_gs_client():
+    # Load credentials from Render environment variable instead of file
+    creds_info = json.loads(os.environ["GOOGLE_CREDS_JSON"])
+    creds = Credentials.from_service_account_info(creds_info, scopes=SCOPE)
+    client = gspread.authorize(creds)
+    return client
+
+def open_or_create_sheet():
+    client = get_gs_client()
+
+    try:
+        sh = client.open(SHEET_NAME)
+    except gspread.SpreadsheetNotFound:
+        sh = client.create(SHEET_NAME)
+
+    worksheet = sh.sheet1
+
+    # Ensure headers
+    expected_headers = ["Customer Name", "Policy Number", "Email", "Date of Birth", "Phone", "Submitted At"]
+    current_values = worksheet.row_values(1)
+    if not current_values or len(current_values) < len(expected_headers):
+        if current_values:
+            worksheet.delete_rows(1)
+        worksheet.insert_row(expected_headers, index=1)
+
+    return worksheet
+
+
 SHEET_NAME = "Customer Data"
 
 # Path to service account JSON (ensure file is in project root and kept secret)
